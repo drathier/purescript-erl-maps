@@ -134,7 +134,15 @@ foreign import unionWithImpl :: forall k v. (Fn2 v v v) -> Map k v -> Map k v ->
 -- | to combine values for duplicate keys.
 unionWith :: forall k v. (v -> v -> v) -> Map k v -> Map k v -> Map k v
 unionWith f m1 m2 =
-  unionWithImpl (mkFn2 f) m1 m2
+  -- unionWithImpl (mkFn2 f) m1 m2
+  fold (\m k v ->
+    case lookup k m of
+      Nothing ->
+        insert k v m
+      Just oldV ->
+        insert k (f v oldV) m
+  ) m2 m1
+
 
 -- | Compute the union of a collection of maps. Keeps the first value for conflicting keys.
 -- | Note: Previously this function kept the last value. Now it keeps the first.
