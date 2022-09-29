@@ -282,4 +282,6 @@ filter predicate = filterWithKey $ const predicate
 -- | Compute the intersection of two maps, preferring values from the first map in the case
 -- | of duplicate keys.
 intersection :: forall k a b. Map k a -> Map k b -> Map k a
-intersection = intersectionWith const
+intersection m1 m2 =
+  -- intersectionWith const m1 m2
+  filterWithKey (\k _ -> member k m2) m1
